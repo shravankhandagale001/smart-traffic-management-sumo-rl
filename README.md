@@ -58,6 +58,19 @@ increases.
 An additional Ray RLlib PPO experiment is available at
 `experiments/ppo_4x4grid.py`. It uses a separate 4×4 grid environment.
 
+The dedicated multi-agent PPO pipeline is:
+
+```bash
+pip install -r requirements_multi_agent.txt
+python train_multi_agent_ppo.py --iterations 10
+python evaluate_multi_agent_ppo.py PATH_TO_CHECKPOINT
+```
+
+In this setup, each traffic signal in the 4×4 grid is an independent agent.
+The agents share the same SUMO simulation and use a shared PPO policy by
+default. The training entry point uses a headless SUMO simulation and stores
+Ray checkpoints under `outputs/multi_agent_ppo/`.
+
 ## Quick start
 
 ### Windows
