@@ -42,7 +42,7 @@ if __name__ == "__main__":
     prs.add_argument("-v", action="store_true", default=False, help="Print experience tuple.\n")
     prs.add_argument("-runs", dest="runs", type=int, default=1, help="Number of runs.\n")
     args = prs.parse_args()
-    experiment_time = str(datetime.now()).split(".")[0]
+    experiment_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     out_csv = f"outputs/single-intersection/{experiment_time}_alpha{args.alpha}_gamma{args.gamma}_eps{args.epsilon}_decay{args.decay}"
 
     env = SumoEnvironment(

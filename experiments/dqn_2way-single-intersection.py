@@ -21,8 +21,8 @@ if __name__ == "__main__":
         route_file="sumo_rl/nets/2way-single-intersection/single-intersection-vhvh.rou.xml",
         out_csv_name="outputs/2way-single-intersection/dqn",
         single_agent=True,
-        use_gui=True,
-        num_seconds=100000,
+        use_gui=False,
+        num_seconds=2000,
     )
 
     model = DQN(
@@ -36,4 +36,5 @@ if __name__ == "__main__":
         exploration_final_eps=0.01,
         verbose=1,
     )
-    model.learn(total_timesteps=100000)
+    model.learn(total_timesteps=6000)
+    model.save("outputs/trained_dqn_2way-single-intersection_model")

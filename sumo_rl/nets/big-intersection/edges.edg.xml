@@ -1,0 +1,10 @@
+<edges>
+  <edge id="in_top" from="top" to="center" numLanes="4" priority="1"/>
+  <edge id="out_top" from="center" to="top" numLanes="4" priority="1"/>
+  <edge id="in_bottom" from="bottom" to="center" numLanes="4" priority="1"/>
+  <edge id="out_bottom" from="center" to="bottom" numLanes="4" priority="1"/>
+  <edge id="in_left" from="left" to="center" numLanes="4" priority="1"/>
+  <edge id="out_left" from="center" to="left" numLanes="4" priority="1"/>
+  <edge id="in_right" from="right" to="center" numLanes="4" priority="1"/>
+  <edge id="out_right" from="center" to="right" numLanes="4" priority="1"/>
+</edges>

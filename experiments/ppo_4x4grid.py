@@ -39,7 +39,7 @@ if __name__ == "__main__":
                 net_file="sumo_rl/nets/4x4-Lucas/4x4.net.xml",
                 route_file="sumo_rl/nets/4x4-Lucas/4x4c1c2c1c2.rou.xml",
                 out_csv_name="outputs/4x4grid/ppo",
-                use_gui=False,
+                use_gui=True,
                 num_seconds=80000,
             )
         ),
@@ -48,7 +48,7 @@ if __name__ == "__main__":
     config = (
         PPOConfig()
         .environment(env=env_name, disable_env_checking=True)
-        .rollouts(num_rollout_workers=4, rollout_fragment_length=128)
+        .rollouts(num_rollout_workers=1, rollout_fragment_length=128)
         .training(
             train_batch_size=512,
             lr=2e-5,

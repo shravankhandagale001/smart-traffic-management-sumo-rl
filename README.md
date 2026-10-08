@@ -7,7 +7,175 @@
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![License](http://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)](https://github.com/LucasAlegre/sumo-rl/blob/main/LICENSE)
 
-# SUMO-RL
+# Smart Traffic Management with PPO and SUMO-RL
+
+This repository contains a smart traffic-signal-control project built with
+[SUMO](https://eclipse.dev/sumo/) and reinforcement learning. The main custom
+experiment uses **Proximal Policy Optimization (PPO)** on a two-way single
+intersection. DQN and fixed-time signal control are included as comparison
+baselines.
+
+The project is built on top of the open-source
+[SUMO-RL](https://github.com/LucasAlegre/sumo-rl) environment. The original
+SUMO-RL license and attribution are retained in this repository.
+
+## Project workflow
+
+```text
+SUMO network and vehicle routes
+        ↓
+SumoEnvironment
+        ↓
+Traffic observations: phase, density, and queues
+        ↓
+PPO or DQN action
+        ↓
+Traffic-light phase control in SUMO
+        ↓
+Waiting-time reward and traffic metrics
+        ↓
+Trained model and CSV evaluation results
+```
+
+The default reward is based on the change in accumulated waiting time. The
+agent is rewarded when total waiting decreases and penalized when congestion
+increases.
+
+## Main implementation files
+
+| File | Purpose |
+| --- | --- |
+| `train_ppo_2way.py` | Train and save the PPO controller. |
+| `evaluate_ppo.py` | Evaluate the trained PPO controller. |
+| `evaluate_dqn.py` | Evaluate the trained DQN controller. |
+| `evaluate_fixed_time.py` | Run the traditional fixed-time baseline. |
+| `evaluation.py` | Summarize generated CSV traffic metrics. |
+| `sumo_rl/environment/env.py` | Gymnasium/SUMO environment and metrics. |
+| `sumo_rl/environment/traffic_signal.py` | Signal actions and reward functions. |
+| `sumo_rl/environment/observations.py` | Traffic-signal observation space. |
+| `sumo_rl/nets/2way-single-intersection/` | Network, route, and SUMO configuration files. |
+
+An additional Ray RLlib PPO experiment is available at
+`experiments/ppo_4x4grid.py`. It uses a separate 4×4 grid environment.
+
+## Quick start
+
+### Windows
+
+Install SUMO from the [official SUMO website](https://eclipse.dev/sumo/), then
+open PowerShell from the repository root and set `SUMO_HOME`:
+
+```powershell
+$env:SUMO_HOME = "C:\Program Files (x86)\Eclipse\Sumo"
+```
+
+Create and activate a virtual environment:
+
+```powershell
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+pip install -e .
+pip install stable-baselines3 torch
+```
+
+If the project already includes a working virtual environment, activate it
+instead:
+
+```powershell
+.\venv\Scripts\Activate.ps1
+```
+
+### Linux
+
+Install SUMO and set `SUMO_HOME` according to the SUMO installation path:
+
+```bash
+sudo add-apt-repository ppa:sumo/stable
+sudo apt-get update
+sudo apt-get install sumo sumo-tools sumo-doc
+export SUMO_HOME="/usr/share/sumo"
+python -m venv venv
+source venv/bin/activate
+pip install -e .
+pip install stable-baselines3 torch
+```
+
+## Run the project
+
+Run all commands from the repository root because the experiment scripts use
+project-relative SUMO network and output paths.
+
+Train PPO:
+
+```bash
+python train_ppo_2way.py
+```
+
+Evaluate PPO, DQN, and fixed-time control:
+
+```bash
+python evaluate_ppo.py
+python evaluate_dqn.py
+python evaluate_fixed_time.py
+```
+
+The evaluation scripts currently enable the SUMO GUI. For servers, CI, or
+headless systems, change `use_gui=True` to `use_gui=False` in the evaluation
+scripts.
+
+Summarize CSV results:
+
+```bash
+python evaluation.py
+```
+
+Trained model files are stored in `outputs/`. Generated CSV logs should
+normally remain local and should not be committed unless they are being used
+as documented experiment artifacts.
+
+## Evaluation metrics
+
+The environment reports metrics including:
+
+- Total and mean waiting time.
+- Mean traffic speed.
+- Number of stopped vehicles.
+- Arrived and departed vehicles.
+- Teleported vehicles.
+- Cumulative RL reward.
+
+Results can vary between runs because SUMO traffic simulations and RL policies
+can be stochastic. For a fair scientific comparison, evaluate each controller
+over the same traffic seeds and multiple episodes.
+
+## Repository structure
+
+```text
+.
+├── train_ppo_2way.py
+├── evaluate_ppo.py
+├── evaluate_dqn.py
+├── evaluate_fixed_time.py
+├── evaluation.py
+├── experiments/
+├── sumo_rl/
+│   ├── environment/
+│   └── nets/
+├── outputs/
+│   ├── trained_ppo_2way-single-intersection_model.zip
+│   └── trained_dqn_2way-single-intersection_model.zip
+├── architecture_prototype_explanation.md
+├── pyproject.toml
+├── setup.py
+└── LICENSE
+```
+
+## Attribution
+
+This project extends and uses the
+[Lucas Alegre SUMO-RL project](https://github.com/LucasAlegre/sumo-rl).
+Please retain the included `LICENSE` and `CITATION.bib` files when publishing
+or redistributing this repository.
 
 <!-- start intro -->
 
