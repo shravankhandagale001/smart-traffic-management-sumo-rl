@@ -157,6 +157,27 @@ The environment reports metrics including:
 - Teleported vehicles.
 - Cumulative RL reward.
 
+## Experimental comparison results
+
+The following results were generated locally from the project models in headless SUMO mode. Single-agent PPO and DQN were trained for 6,000 environment timesteps. The reported multi-agent PPO checkpoint was trained for 5 PPO iterations, collecting 2,560 environment steps and 40,960 agent steps in total.
+
+The single-intersection controllers were evaluated for 500 simulated seconds (100 decisions at the 5-second action interval). Multi-agent PPO was evaluated for 499 one-second control steps on the 4x4 grid with 16 signal agents. Since the scenarios are different, these values are diagnostic results rather than a directly controlled scientific ranking.
+
+| Controller | Scenario | Evaluation steps | Total reward | Mean waiting time (s) | Mean speed (m/s) | Mean stopped vehicles | Final waiting time (s) | Arrived | Departed | Backlog | Teleported |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Fixed-time | 2-way intersection / 500 s | 100 | -66.18 | 15.883 | 3.762 | 31.47 | 790 | 271 | 330 | 20 | 0 |
+| DQN | 2-way intersection / 500 s | 100 | -72.19 | 25.537 | 4.634 | 22.23 | 7,163 | 282 | 342 | 8 | 0 |
+| Single-agent PPO | 2-way intersection / 500 s | 100 | -46.28 | 33.139 | 4.167 | 28.19 | 4,201 | 295 | 350 | 0 | 0 |
+| Multi-agent PPO | 4x4 grid / 499 s | 499 | -3.57 | 0.504 | 8.304 | 33.57 | 168 | 1,078 | 1,336 | 0 | 0 |
+
+Training configuration:
+
+- DQN: 6,000 environment timesteps.
+- Single-agent PPO: 6,000 environment timesteps.
+- Multi-agent PPO: 5 PPO iterations, 2,560 environment steps, and 40,960 agent steps for the reported checkpoint. The training script default is 10 iterations.
+
+The complete metric definitions and experiment caveats are available in `comparison_results.md`. For a fair algorithm ranking, use the same network, traffic demand, random seed, duration, and repeated episodes for every controller.
+
 Results can vary between runs because SUMO traffic simulations and RL policies
 can be stochastic. For a fair scientific comparison, evaluate each controller
 over the same traffic seeds and multiple episodes.
